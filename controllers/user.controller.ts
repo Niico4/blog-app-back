@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import User from '../models/User.model';
 import generateJWT from '../helpers/generateJWT';
 import { randomUUID } from 'crypto';
+import emailRegister from '../helpers/emailRegister';
+import emailResetPassword from '../helpers/emailResetPassword';
 
 const errorMessage = (res: Response, numberError: number, message: string) => {
   const error = new Error(message);
@@ -13,7 +15,7 @@ const okMessage = (res: Response, message: string) => {
 };
 
 const registerUser = async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const { email, name } = req.body;
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
@@ -24,6 +26,9 @@ const registerUser = async (req: Request, res: Response) => {
     const user = new User(req.body);
     const userSave = await user.save();
 
+    if (!userSave.token) return;
+    emailRegister({ email, name, token: userSave.token });
+
     res.json(userSave);
   } catch (error) {
     console.log(error);
@@ -33,7 +38,7 @@ const registerUser = async (req: Request, res: Response) => {
 const getUserProfile = (req: Request, res: Response) => {
   const { user } = req;
 
-  res.json({ profile: user });
+  res.json(user);
 };
 
 const getUserConfirmed = async (req: Request, res: Response) => {
@@ -101,6 +106,12 @@ const resetPassword = async (req: Request, res: Response) => {
   try {
     userExist.token = randomUUID();
     await userExist.save();
+
+    emailResetPassword({
+      email,
+      name: userExist.name,
+      token: userExist.token,
+    });
 
     return okMessage(res, 'Se ha enviado un email de verificación');
   } catch (error) {
