@@ -1,5 +1,5 @@
 {
-  "name": "blog-app-backend",
+  "name": "blinkbytes-backend",
   "version": "1.0.0",
   "description": "API RESTful para una plataforma de blogs, desarrollada con Node.js, Express y MongoDB. Permite la creación, edición y eliminación de publicaciones, manejo de usuarios y autenticación segura",
   "main": "index.ts",
