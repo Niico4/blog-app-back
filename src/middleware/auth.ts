@@ -28,11 +28,11 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
       throw new Error('Token no definido');
     }
 
-    if (!process.env.JWT_SECRET) {
+    if (!process.env.JWT_SECRET_KEY) {
       throw new Error('No se encontró la clave secreta para el token');
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY) as JwtPayload;
 
     const user = await User.findById(decoded.id).select(
       '-password -token -confirmedUser'

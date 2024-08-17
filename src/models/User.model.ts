@@ -31,11 +31,13 @@ const userSchema: Schema<IUser> = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
+    match: [/.+@.+\..+/, 'Debe proporcionar un correo electrónico válido'],
   },
   password: {
     type: String,
     required: true,
     trim: true,
+    minlength: [6, 'La contraseña debe tener al menos 6 caracteres'],
   },
   phoneNumber: {
     type: String,
@@ -70,7 +72,7 @@ userSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
 
@@ -78,6 +80,6 @@ userSchema.methods.checkPassword = async function (passwordForm: string) {
   return await bcrypt.compare(passwordForm, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
 export default User;

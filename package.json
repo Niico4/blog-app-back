@@ -2,10 +2,10 @@
   "name": "blinkbytes-backend",
   "version": "1.0.0",
   "description": "API RESTful para una plataforma de blogs, desarrollada con Node.js, Express y MongoDB. Permite la creación, edición y eliminación de publicaciones, manejo de usuarios y autenticación segura",
-  "main": "index.ts",
+  "main": "./src/index.ts",
   "scripts": {
-    "dev": "nodemon index.ts",
-    "start": "ts-node index.ts",
+    "dev": "nodemon ./src/index.ts",
+    "start": "ts-node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nicolas Garzón",
@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.1",
     "nodemailer": "^6.9.14",

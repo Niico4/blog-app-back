@@ -11,15 +11,13 @@ app.use(express.json());
 dotenv.config();
 connectDB();
 
-const allowedDomains = [process.env.FRONTEND_URL];
+const allowedDomains = [process.env.FRONTEND_BASE_URL];
 const corsOptions = {
   origin: (
     origin: string | undefined,
     callback: (err: Error | null, allow?: boolean) => void
   ) => {
-    if (!origin) return;
-
-    if (allowedDomains.indexOf(origin) !== -1) {
+    if (!origin || allowedDomains.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

@@ -6,7 +6,6 @@ const connectDB = async () => {
       process.env.MONGODB_URI ?? 'MongoDB uri undefined'
     );
 
-    // TODO: Comment
     const url = `${db.connection.host}:${db.connection.port}`;
     console.log(`MongoDB connect in: ${url}`);
   } catch (error) {
