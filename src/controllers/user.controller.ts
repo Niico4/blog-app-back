@@ -69,17 +69,14 @@ const getUserProfile = (req: Request, res: Response) => {
     }
 
     return res.json({
-      message: 'Perfil de usuario obtenido con éxito',
-      data: {
-        _id: user._id,
-        name: user.name,
-        lastName: user.lastName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        webSite: user.webSite,
-        token: user.token,
-        confirmedUser: user.confirmedUser,
-      },
+      _id: user._id,
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      webSite: user.webSite,
+      token: user.token,
+      confirmedUser: user.confirmedUser,
     });
   } catch (error) {
     console.error('Error al obtener el perfil del usuario: ', error);
@@ -129,7 +126,6 @@ const authenticateUser = async (req: Request, res: Response) => {
       return sendErrorMessage(res, 401, 'Contraseña incorrecta');
     }
 
-    // TODO: Testear si genera problemas y cambiar por .id
     const token = generateJWT(user._id);
     return res.json({ token });
   } catch (error) {
