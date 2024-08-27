@@ -1,13 +1,6 @@
 import express from 'express';
-import {
-  authenticateUser,
-  verifyToken,
-  getUserConfirmed,
-  getUserProfile,
-  updatePassword,
-  registerNewUser,
-  requestPasswordReset,
-} from '../controllers/user.controller';
+
+import { authenticateUser, getUserConfirmed, getUserProfile, registerNewUser, requestPasswordReset, updatePassword, updateProfile, verifyToken } from '../controllers/user.controller';
 import checkAuth from '../middleware/auth';
 
 const router = express.Router();
@@ -24,5 +17,6 @@ router
   .post(updatePassword);
 
 router.get('/user/profile', checkAuth, getUserProfile);
+router.put('/user/profile/:id', checkAuth, updateProfile);
 
 export default router;

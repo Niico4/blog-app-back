@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import Post from '../models/Post.model';
 
 const handleErrors = (res: Response, error: any, message: string) => {
@@ -8,8 +9,9 @@ const handleErrors = (res: Response, error: any, message: string) => {
 
 const addNewPost = async (req: Request, res: Response) => {
   try {
+    const { _id, ...postData } = req.body;
     const post = new Post({
-      ...req.body,
+      ...postData,
       user: req.user?._id,
       author: req.user?.email,
     });

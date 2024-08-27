@@ -1,12 +1,13 @@
-import { Request, Response } from 'express';
-import User from '../models/User.model';
-import generateJWT from '../helpers/generateJWT';
 import { randomUUID } from 'crypto';
+import { Request, Response } from 'express';
+import { body, validationResult } from 'express-validator';
+
+import generateJWT from '../helpers/generateJWT';
 import {
   sendErrorMessage,
   sendSuccessMessage,
 } from '../helpers/responseMessage';
-import { body, validationResult } from 'express-validator';
+import User from '../models/User.model';
 import {
   sendAccountConfirmationEmail,
   sendPasswordResetEmail,
@@ -226,6 +227,54 @@ const updatePassword = async (req: Request, res: Response) => {
   }
 };
 
+const updateProfile = async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const { email, name, lastName, phoneNumber, webSite } = req.body;
+
+  if (!email || !name || !lastName) {
+    return sendErrorMessage(
+      res,
+      400,
+      'Nombre, apellido y correo electrónico son obligatorios'
+    );
+  }
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return sendErrorMessage(res, 404, 'Usuario no encontrado');
+    }
+
+    if (user.email !== email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return sendErrorMessage(res, 400, 'Correo electrónico ya existe');
+      }
+    }
+
+    user.name = name;
+    user.lastName = lastName;
+    user.email = email;
+    user.phoneNumber = phoneNumber;
+    user.webSite = webSite;
+
+    const userUpdate = await user.save();
+    return sendSuccessMessage(
+      res,
+      'Perfil actualizado correctamente',
+      userUpdate
+    );
+  } catch (error) {
+    console.error('Error al actualizar la información:', error);
+    return sendErrorMessage(
+      res,
+      500,
+      'Error interno del servidor al actualizar la información.'
+    );
+  }
+};
+
 export {
   authenticateUser,
   getUserConfirmed,
@@ -233,5 +282,6 @@ export {
   registerNewUser,
   requestPasswordReset,
   updatePassword,
+  updateProfile,
   verifyToken,
 };
