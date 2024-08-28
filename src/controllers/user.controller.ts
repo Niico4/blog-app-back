@@ -275,6 +275,30 @@ const updateProfile = async (req: Request, res: Response) => {
   }
 };
 
+const updateNewPassword = async (req: Request, res: Response) => {
+  const userId = req.user;
+  const { currentPassword, newPassword } = req.body;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return sendErrorMessage(res, 404, 'Usuario no encontrado');
+  }
+
+  if (await user.checkPassword(currentPassword)) {
+    user.password = newPassword;
+    const userUpdate = await user.save();
+
+    return sendSuccessMessage(
+      res,
+      'Contraseña actualizada correctamente',
+      userUpdate
+    );
+  } else {
+    return sendErrorMessage(res, 400, 'Contraseña actual incorrecta');
+  }
+};
+
 export {
   authenticateUser,
   getUserConfirmed,
@@ -283,5 +307,6 @@ export {
   requestPasswordReset,
   updatePassword,
   updateProfile,
+  updateNewPassword,
   verifyToken,
 };
